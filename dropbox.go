@@ -28,8 +28,6 @@ func NewDropbox(options ...DropboxOption) *Dropbox {
 		pm:     pm,
 	}
 
-	dropbox.Reconfigure(options...)
-
 	if dropbox.isLogExternal {
 		pm.Reconfigure(manager.WithLogger(log))
 	}
@@ -46,6 +44,8 @@ func NewDropbox(options ...DropboxOption) *Dropbox {
 	}
 
 	dropbox.config = &appConfig.Dropbox
+
+	dropbox.Reconfigure(options...)
 
 	return dropbox
 }
