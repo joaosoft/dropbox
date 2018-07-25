@@ -69,20 +69,20 @@ func (u *User) Get() (*getUserResponse, *errors.ErrorData) {
 	}
 
 	if status, response, err := u.client.Request(http.MethodPost, u.config.Hosts.Api, "/users/get_current_account", headers, nil); err != nil {
-		newErr := errors.NewError(err)
+		newErr := errors.New(err)
 		log.WithField("response", response).Error("error getting User account").ToErrorData(newErr)
 		return nil, newErr
 	} else if status != http.StatusOK {
 		var err error
 		log.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError(&err)
-		return nil, errors.NewError(err)
+		return nil, errors.New(err)
 	} else if response == nil {
 		var err error
 		log.Error("error getting User account").ToError(&err)
-		return nil, errors.NewError(err)
+		return nil, errors.New(err)
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
-			newErr := errors.NewError(err)
+			newErr := errors.New(err)
 			log.Error("error converting Dropbox User data").ToErrorData(newErr)
 			return nil, newErr
 		}

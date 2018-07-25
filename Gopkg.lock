@@ -46,25 +46,25 @@
   branch = "master"
   name = "github.com/joaosoft/errors"
   packages = ["."]
-  revision = "1d5bd3de67a4e2116faeab177d4a858d6eac3665"
+  revision = "26de174de522922a2e1b7520dba32fe23c6d0fd6"
 
 [[projects]]
   branch = "master"
   name = "github.com/joaosoft/logger"
   packages = ["."]
-  revision = "9da9376690ff3265e2e23e80ea76a945c1f284ed"
+  revision = "61c136ab7bd9fa2b39e6dc324f26ed90e1400ff7"
 
 [[projects]]
   branch = "master"
   name = "github.com/joaosoft/manager"
   packages = ["."]
-  revision = "7c5b104bbc0eee997f8a0792a55f85f5eabfcbfe"
+  revision = "da4684f0700b07261bc66c1262243463a3cd06cb"
 
 [[projects]]
   branch = "master"
   name = "github.com/joaosoft/writers"
   packages = ["."]
-  revision = "f0c935fdc24aa0480363e70a9218aa5064e47d92"
+  revision = "1bf8fc39ed07431e08f868eb80edbb65ceb33514"
 
 [[projects]]
   name = "github.com/labstack/echo"
@@ -112,7 +112,7 @@
   branch = "master"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
-  revision = "bb74f1db0675b241733089d5a1faa5dd8b0ef57b"
+  revision = "f15292f7a699fcc1a38a80977f80a046874ba8ac"
 
 [[projects]]
   name = "github.com/nsqio/go-nsq"
@@ -127,10 +127,10 @@
   version = "v1.2.0"
 
 [[projects]]
+  branch = "master"
   name = "github.com/satori/go.uuid"
   packages = ["."]
-  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
-  version = "v1.2.0"
+  revision = "36e9d2ebbde5e3f13ab2e25625fd453271d6522e"
 
 [[projects]]
   name = "github.com/spf13/afero"
@@ -184,13 +184,13 @@
     "acme",
     "acme/autocert"
   ]
-  revision = "a49355c7e3f8fe157a85be2f77e6e269a0f89602"
+  revision = "c126467f60eb25f8f27e5a981f32a87e3965053f"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "7138fd3d9dc8335c567ca206f4333fb75eb05d56"
+  revision = "e072cadbbdc8dd3d3ffa82b8b4b9304c261d9311"
 
 [[projects]]
   name = "golang.org/x/text"
