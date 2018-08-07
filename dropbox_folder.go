@@ -67,7 +67,7 @@ func (f *Folder) List(path string) (*listFolderResponse, *errors.ErrorData) {
 		IncludeMountedFolders:           true,
 	})
 	if err != nil {
-		newErr := errors.New(err)
+		newErr := errors.New("0", err)
 		log.Error("error marshal bodyArgs").ToErrorData(newErr)
 		return nil, newErr
 	}
@@ -79,20 +79,20 @@ func (f *Folder) List(path string) (*listFolderResponse, *errors.ErrorData) {
 
 	dropboxResponse := &listFolderResponse{}
 	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Api, "/files/list_folder", headers, body); err != nil {
-		newErr := errors.New(err)
+		newErr := errors.New("0", err)
 		log.WithField("response", response).Error("error listing Folder").ToErrorData(newErr)
 		return nil, newErr
 	} else if status != http.StatusOK {
 		var err error
 		log.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError(&err)
-		return nil, errors.New(err)
+		return nil, errors.New("0", err)
 	} else if response == nil {
 		var err error
 		log.Error("error listing Folder").ToError(&err)
-		return nil, errors.New(err)
+		return nil, errors.New("0", err)
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
-			newErr := errors.New(err)
+			newErr := errors.New("0", err)
 			log.Error("error converting Dropbox response data").ToErrorData(newErr)
 			return nil, newErr
 		}
@@ -138,7 +138,7 @@ func (f *Folder) Create(path string) (*createFolderResponse, *errors.ErrorData) 
 		AutoRename: false,
 	})
 	if err != nil {
-		newErr := errors.New(err)
+		newErr := errors.New("0", err)
 		log.Error("error marshal bodyArgs").ToErrorData(newErr)
 		return nil, newErr
 	}
@@ -150,20 +150,20 @@ func (f *Folder) Create(path string) (*createFolderResponse, *errors.ErrorData) 
 
 	dropboxResponse := &createFolderResponse{}
 	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Api, "/files/create_folder_v2", headers, body); err != nil {
-		newErr := errors.New(err)
+		newErr := errors.New("0", err)
 		log.WithField("response", response).Error("error creating Folder").ToErrorData(newErr)
 		return nil, newErr
 	} else if status != http.StatusOK {
 		var err error
 		log.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError(&err)
-		return nil, errors.New(err)
+		return nil, errors.New("0", err)
 	} else if response == nil {
 		var err error
 		log.Error("error creating Folder").ToError(&err)
-		return nil, errors.New(err)
+		return nil, errors.New("0", err)
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
-			newErr := errors.New(err)
+			newErr := errors.New("0", err)
 			log.Error("error converting Dropbox response data").ToErrorData(newErr)
 			return nil, newErr
 		}
