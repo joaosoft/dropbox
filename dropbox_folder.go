@@ -54,7 +54,7 @@ type listFolderResponse struct {
 	HasMore bool   `json:"has_more"`
 }
 
-func (f *Folder) List(path string) (*listFolderResponse, *errors.ErrorData) {
+func (f *Folder) List(path string) (*listFolderResponse, *errors.Err) {
 	if path == "/" {
 		path = ""
 	}
@@ -68,7 +68,7 @@ func (f *Folder) List(path string) (*listFolderResponse, *errors.ErrorData) {
 	})
 	if err != nil {
 		newErr := errors.New("0", err)
-		log.Error("error marshal bodyArgs").ToErrorData(newErr)
+		log.Error("error marshal bodyArgs").ToErr(newErr)
 		return nil, newErr
 	}
 
@@ -80,7 +80,7 @@ func (f *Folder) List(path string) (*listFolderResponse, *errors.ErrorData) {
 	dropboxResponse := &listFolderResponse{}
 	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Api, "/files/list_folder", headers, body); err != nil {
 		newErr := errors.New("0", err)
-		log.WithField("response", response).Error("error listing Folder").ToErrorData(newErr)
+		log.WithField("response", response).Error("error listing Folder").ToErr(newErr)
 		return nil, newErr
 	} else if status != http.StatusOK {
 		var err error
@@ -93,7 +93,7 @@ func (f *Folder) List(path string) (*listFolderResponse, *errors.ErrorData) {
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
 			newErr := errors.New("0", err)
-			log.Error("error converting Dropbox response data").ToErrorData(newErr)
+			log.Error("error converting Dropbox response data").ToErr(newErr)
 			return nil, newErr
 		}
 		return dropboxResponse, nil
@@ -129,7 +129,7 @@ type createFolderResponse struct {
 	} `json:"metadata"`
 }
 
-func (f *Folder) Create(path string) (*createFolderResponse, *errors.ErrorData) {
+func (f *Folder) Create(path string) (*createFolderResponse, *errors.Err) {
 	if path == "/" {
 		path = ""
 	}
@@ -139,7 +139,7 @@ func (f *Folder) Create(path string) (*createFolderResponse, *errors.ErrorData) 
 	})
 	if err != nil {
 		newErr := errors.New("0", err)
-		log.Error("error marshal bodyArgs").ToErrorData(newErr)
+		log.Error("error marshal bodyArgs").ToErr(newErr)
 		return nil, newErr
 	}
 
@@ -151,7 +151,7 @@ func (f *Folder) Create(path string) (*createFolderResponse, *errors.ErrorData) 
 	dropboxResponse := &createFolderResponse{}
 	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Api, "/files/create_folder_v2", headers, body); err != nil {
 		newErr := errors.New("0", err)
-		log.WithField("response", response).Error("error creating Folder").ToErrorData(newErr)
+		log.WithField("response", response).Error("error creating Folder").ToErr(newErr)
 		return nil, newErr
 	} else if status != http.StatusOK {
 		var err error
@@ -164,7 +164,7 @@ func (f *Folder) Create(path string) (*createFolderResponse, *errors.ErrorData) 
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
 			newErr := errors.New("0", err)
-			log.Error("error converting Dropbox response data").ToErrorData(newErr)
+			log.Error("error converting Dropbox response data").ToErr(newErr)
 			return nil, newErr
 		}
 		return dropboxResponse, nil
@@ -173,7 +173,7 @@ func (f *Folder) Create(path string) (*createFolderResponse, *errors.ErrorData) 
 	return nil, nil
 }
 
-func (f *Folder) DeleteFolder(path string) (*deleteFileResponse, *errors.ErrorData) {
+func (f *Folder) DeleteFolder(path string) (*deleteFileResponse, *errors.Err) {
 	file := File{
 		client: f.client,
 		config: f.config,

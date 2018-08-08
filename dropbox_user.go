@@ -62,7 +62,7 @@ type getUserResponse struct {
 }
 
 // Get ...
-func (u *User) Get() (*getUserResponse, *errors.ErrorData) {
+func (u *User) Get() (*getUserResponse, *errors.Err) {
 	dropboxResponse := &getUserResponse{}
 	headers := manager.Headers{
 		"Authorization": {fmt.Sprintf("%s %s", u.config.Authorization.Access, u.config.Authorization.Token)},
@@ -70,7 +70,7 @@ func (u *User) Get() (*getUserResponse, *errors.ErrorData) {
 
 	if status, response, err := u.client.Request(http.MethodPost, u.config.Hosts.Api, "/users/get_current_account", headers, nil); err != nil {
 		newErr := errors.New("0", err)
-		log.WithField("response", response).Error("error getting User account").ToErrorData(newErr)
+		log.WithField("response", response).Error("error getting User account").ToErr(newErr)
 		return nil, newErr
 	} else if status != http.StatusOK {
 		var err error
@@ -83,7 +83,7 @@ func (u *User) Get() (*getUserResponse, *errors.ErrorData) {
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
 			newErr := errors.New("0", err)
-			log.Error("error converting Dropbox User data").ToErrorData(newErr)
+			log.Error("error converting Dropbox User data").ToErr(newErr)
 			return nil, newErr
 		}
 		return dropboxResponse, nil
