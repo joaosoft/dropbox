@@ -6,8 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	errors "github.com/joaosoft/errors"
-	manager "github.com/joaosoft/manager"
+	"github.com/joaosoft/manager"
 )
 
 type writeMode string
@@ -54,7 +53,7 @@ type uploadFileResponse struct {
 	ContentHash              string `json:"content_hash"`
 }
 
-func (f *File) Upload(path string, file []byte) (*uploadFileResponse, *errors.Err) {
+func (f *File) Upload(path string, file []byte) (*uploadFileResponse, error) {
 	var err error
 	var bodyArgs []byte
 	args := uploadFileRequest{
@@ -65,9 +64,8 @@ func (f *File) Upload(path string, file []byte) (*uploadFileResponse, *errors.Er
 	}
 
 	if bodyArgs, err = json.Marshal(args); err != nil {
-		newErr := errors.New("0", err)
-		log.Error("errors converting upload input arguments").ToErr(newErr)
-		return nil, newErr
+		err = log.Error("errors converting upload input arguments").ToError()
+		return nil, err
 	}
 
 	headers := manager.Headers{
@@ -78,27 +76,23 @@ func (f *File) Upload(path string, file []byte) (*uploadFileResponse, *errors.Er
 
 	dropboxResponse := &uploadFileResponse{}
 	if err != nil {
-		newErr := errors.New("0", err)
-		log.Error("errors marshal arguments").ToErr(newErr)
-		return nil, newErr
+		err = log.Error("errors marshal arguments").ToError()
+		return nil, err
 	}
 	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Content, "/files/upload", headers, file); err != nil {
-		newErr := errors.New("0", err)
-		log.WithField("response", response).Error("errors uploading File").ToErr(newErr)
-		return nil, newErr
+		err = log.WithField("response", response).Error("errors uploading File").ToError()
+		return nil, err
 	} else if status != http.StatusOK {
 		var err error
-		log.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError(&err)
-		return nil, errors.New("0", err)
+		err = log.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError()
+		return nil, err
 	} else if response == nil {
-		var err error
-		log.Error("errors uploading File").ToError(&err)
-		return nil, errors.New("0", err)
+		err = log.Error("errors uploading File").ToError()
+		return nil, err
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
-			newErr := errors.New("0", err)
-			log.Error("errors converting Dropbox response data").ToErr(newErr)
-			return nil, newErr
+			err = log.Error("errors converting Dropbox response data").ToError()
+			return nil, err
 		}
 		return dropboxResponse, nil
 	}
@@ -110,7 +104,7 @@ type downloadFileRequest struct {
 	Path string `json:"path"`
 }
 
-func (f *File) Download(path string) ([]byte, *errors.Err) {
+func (f *File) Download(path string) ([]byte, error) {
 	var err error
 	var bodyArgs []byte
 	args := downloadFileRequest{
@@ -118,9 +112,8 @@ func (f *File) Download(path string) ([]byte, *errors.Err) {
 	}
 
 	if bodyArgs, err = json.Marshal(args); err != nil {
-		newErr := errors.New("0", err)
-		log.Error("errors converting download input arguments").ToErr(newErr)
-		return nil, newErr
+		err = log.Error("errors converting download input arguments").ToError()
+		return nil, err
 	}
 
 	headers := manager.Headers{
@@ -129,17 +122,14 @@ func (f *File) Download(path string) ([]byte, *errors.Err) {
 	}
 
 	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Content, "/files/download", headers, []byte("")); err != nil {
-		newErr := errors.New("0", err)
-		log.WithField("response", response).Error("errors downloading File").ToErr(newErr)
-		return nil, newErr
+		err = log.WithField("response", response).Error("errors downloading File").ToError()
+		return nil, err
 	} else if status != http.StatusOK {
-		var err error
-		log.WithField("response", response).WithFields(map[string]interface{}{"response": string(response)}).Errorf("response status %d instead of %d", status, http.StatusOK).ToError(&err)
-		return nil, errors.New("0", err)
+		err = log.WithField("response", response).WithFields(map[string]interface{}{"response": string(response)}).Errorf("response status %d instead of %d", status, http.StatusOK).ToError()
+		return nil, err
 	} else if response == nil {
-		var err error
-		log.Error("errors downloading File").ToError(&err)
-		return nil, errors.New("0", err)
+		err = log.Error("errors downloading File").ToError()
+		return nil, err
 	} else {
 		return response, nil
 	}
@@ -179,7 +169,7 @@ type deleteFileResponse struct {
 	} `json:"metadata"`
 }
 
-func (f *File) Delete(path string) (*deleteFileResponse, *errors.Err) {
+func (f *File) Delete(path string) (*deleteFileResponse, error) {
 	if path == "/" {
 		path = ""
 	}
@@ -187,9 +177,8 @@ func (f *File) Delete(path string) (*deleteFileResponse, *errors.Err) {
 		Path: path,
 	})
 	if err != nil {
-		newErr := errors.New("0", err)
-		log.Error("errors marshal arguments").ToErr(newErr)
-		return nil, newErr
+		err = log.Error("errors marshal arguments").ToError()
+		return nil, err
 	}
 
 	headers := manager.Headers{
@@ -199,22 +188,18 @@ func (f *File) Delete(path string) (*deleteFileResponse, *errors.Err) {
 
 	dropboxResponse := &deleteFileResponse{}
 	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Api, "/files/delete_v2", headers, body); err != nil {
-		newErr := errors.New("0", err)
-		log.WithField("response", response).Error("errors deleting File").ToErr(newErr)
-		return nil, newErr
+		err = log.WithField("response", response).Error("errors deleting File").ToError()
+		return nil, err
 	} else if status != http.StatusOK {
-		var err error
-		log.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError(&err)
-		return nil, errors.New("0", err)
+		err = log.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError()
+		return nil, err
 	} else if response == nil {
-		var err error
-		log.Error("errors deleting File").ToError(&err)
-		return nil, errors.New("0", err)
+		err = log.Error("errors deleting File").ToError()
+		return nil, err
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
-			newErr := errors.New("0", err)
-			log.Error("errors converting Dropbox response data").ToErr(newErr)
-			return nil, newErr
+			err = log.Error("errors converting Dropbox response data").ToError()
+			return nil, err
 		}
 		return dropboxResponse, nil
 	}

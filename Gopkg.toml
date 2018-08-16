@@ -37,10 +37,10 @@
   branch = "master"
   name = "github.com/joaosoft/manager"
 
-[prune]
-  go-tests = true
-  unused-packages = true
-
 [[override]]
   name = "github.com/satori/go.uuid"
   branch = "master"
+
+[prune]
+  go-tests = true
+  unused-packages = true

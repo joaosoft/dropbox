@@ -7,7 +7,6 @@ import (
 
 	"fmt"
 
-	errors "github.com/joaosoft/errors"
 	manager "github.com/joaosoft/manager"
 )
 
@@ -62,29 +61,25 @@ type getUserResponse struct {
 }
 
 // Get ...
-func (u *User) Get() (*getUserResponse, *errors.Err) {
+func (u *User) Get() (*getUserResponse, error) {
 	dropboxResponse := &getUserResponse{}
 	headers := manager.Headers{
 		"Authorization": {fmt.Sprintf("%s %s", u.config.Authorization.Access, u.config.Authorization.Token)},
 	}
 
 	if status, response, err := u.client.Request(http.MethodPost, u.config.Hosts.Api, "/users/get_current_account", headers, nil); err != nil {
-		newErr := errors.New("0", err)
-		log.WithField("response", response).Error("error getting User account").ToErr(newErr)
-		return nil, newErr
+		err = log.WithField("response", response).Error("error getting User account").ToError()
+		return nil, err
 	} else if status != http.StatusOK {
-		var err error
-		log.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError(&err)
-		return nil, errors.New("0", err)
+		err = log.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError()
+		return nil, err
 	} else if response == nil {
-		var err error
-		log.Error("error getting User account").ToError(&err)
-		return nil, errors.New("0", err)
+		err = log.Error("error getting User account").ToError()
+		return nil, err
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
-			newErr := errors.New("0", err)
-			log.Error("error converting Dropbox User data").ToErr(newErr)
-			return nil, newErr
+			err = log.Error("error converting Dropbox User data").ToError()
+			return nil, err
 		}
 		return dropboxResponse, nil
 	}
