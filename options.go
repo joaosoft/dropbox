@@ -1,6 +1,9 @@
 package dropbox
 
-import logger "github.com/joaosoft/logger"
+import (
+	logger "github.com/joaosoft/logger"
+	"github.com/joaosoft/manager"
+)
 
 // DropboxOption ...
 type DropboxOption func(dropbox *Dropbox)
@@ -31,5 +34,12 @@ func WithLogger(logger logger.ILogger) DropboxOption {
 func WithLogLevel(level logger.Level) DropboxOption {
 	return func(dropbox *Dropbox) {
 		log.SetLevel(level)
+	}
+}
+
+// WithManager ...
+func WithManager(mgr *manager.Manager) DropboxOption {
+	return func(dropbox *Dropbox) {
+		dropbox.pm = mgr
 	}
 }
