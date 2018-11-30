@@ -22,10 +22,11 @@ type File struct {
 }
 
 type uploadFileRequest struct {
-	Path       string    `json:"path"`
-	Mode       writeMode `json:"mode"`
-	AutoRename bool      `json:"auto_rename"`
-	Mute       bool      `json:"mute"`
+	Path           string    `json:"path"`
+	Mode           writeMode `json:"mode"`
+	AutoRename     bool      `json:"autorename"`
+	Mute           bool      `json:"mute"`
+	StrictConflict bool      "strict_conflict"
 }
 
 type uploadFileResponse struct {
