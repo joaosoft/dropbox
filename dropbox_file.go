@@ -80,14 +80,14 @@ func (f *File) Upload(path string, file []byte) (*uploadFileResponse, error) {
 		return nil, err
 	}
 	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Content, "/files/upload", headers, file); err != nil {
-		err = log.WithField("response", response).Error("errors uploading File").ToError()
+		log.WithField("response", response).Errorf("error uploading file to %s", path)
 		return nil, err
 	} else if status != http.StatusOK {
 		var err error
 		err = log.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError()
 		return nil, err
 	} else if response == nil {
-		err = log.Error("errors uploading File").ToError()
+		err = log.WithField("response", response).Errorf("error uploading file to %s", path).ToError()
 		return nil, err
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
