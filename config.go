@@ -3,7 +3,8 @@ package dropbox
 import (
 	"fmt"
 
-	gomanager "github.com/joaosoft/manager")
+	gomanager "github.com/joaosoft/manager"
+)
 
 // AppConfig ...
 type AppConfig struct {
@@ -28,7 +29,7 @@ type DropboxConfig struct {
 // NewConfig ...
 func NewConfig(access, token string) *DropboxConfig {
 	appConfig := &AppConfig{}
-	if _, err := gomanager.NewSimpleConfig(fmt.Sprintf("/config/models.%s.json", getEnv()), appConfig); err != nil {
+	if _, err := gomanager.NewSimpleConfig(fmt.Sprintf("/config/app.%s.json", getEnv()), appConfig); err != nil {
 		log.Error(err.Error())
 	}
 
