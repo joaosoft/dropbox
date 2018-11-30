@@ -26,7 +26,7 @@ type uploadFileRequest struct {
 	Mode           writeMode `json:"mode"`
 	AutoRename     bool      `json:"autorename"`
 	Mute           bool      `json:"mute"`
-	StrictConflict bool      "strict_conflict"
+	StrictConflict bool      `json:"strict_conflict"`
 }
 
 type uploadFileResponse struct {
