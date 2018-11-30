@@ -34,7 +34,7 @@ func NewDropbox(options ...DropboxOption) *Dropbox {
 
 	// load configuration File
 	appConfig := &AppConfig{}
-	if simpleConfig, err := manager.NewSimpleConfig(fmt.Sprintf("/config/models.%s.json", getEnv()), appConfig); err != nil {
+	if simpleConfig, err := manager.NewSimpleConfig(fmt.Sprintf("/config/app.%s.json", getEnv()), appConfig); err != nil {
 		log.Error(err.Error())
 	} else {
 		pm.AddConfig("config_app", simpleConfig)
