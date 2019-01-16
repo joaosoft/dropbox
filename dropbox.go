@@ -36,14 +36,14 @@ func NewDropbox(options ...DropboxOption) *Dropbox {
 	appConfig := &AppConfig{}
 	if simpleConfig, err := manager.NewSimpleConfig(fmt.Sprintf("/config/app.%s.json", getEnv()), appConfig); err != nil {
 		log.Error(err.Error())
-	} else {
+	} else if appConfig.Dropbox != nil {
 		pm.AddConfig("config_app", simpleConfig)
 		level, _ := logger.ParseLevel(appConfig.Dropbox.Log.Level)
 		log.Debugf("setting log level to %s", level)
 		log.Reconfigure(logger.WithLevel(level))
 	}
 
-	dropbox.config = &appConfig.Dropbox
+	dropbox.config = appConfig.Dropbox
 
 	dropbox.Reconfigure(options...)
 

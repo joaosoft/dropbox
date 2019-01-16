@@ -8,7 +8,7 @@ import (
 
 // AppConfig ...
 type AppConfig struct {
-	Dropbox DropboxConfig `json:"dropbox"`
+	Dropbox *DropboxConfig `json:"dropbox"`
 }
 
 // DropboxConfig ...
@@ -36,5 +36,5 @@ func NewConfig(access, token string) *DropboxConfig {
 	appConfig.Dropbox.Authorization.Access = access
 	appConfig.Dropbox.Authorization.Token = token
 
-	return &appConfig.Dropbox
+	return appConfig.Dropbox
 }
