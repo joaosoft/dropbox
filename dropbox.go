@@ -26,6 +26,7 @@ func NewDropbox(options ...DropboxOption) *Dropbox {
 	dropbox := &Dropbox{
 		client: manager.NewSimpleGateway(),
 		pm:     pm,
+		config: &DropboxConfig{},
 	}
 
 	if dropbox.isLogExternal {
@@ -41,9 +42,8 @@ func NewDropbox(options ...DropboxOption) *Dropbox {
 		level, _ := logger.ParseLevel(appConfig.Dropbox.Log.Level)
 		log.Debugf("setting log level to %s", level)
 		log.Reconfigure(logger.WithLevel(level))
+		dropbox.config = appConfig.Dropbox
 	}
-
-	dropbox.config = appConfig.Dropbox
 
 	dropbox.Reconfigure(options...)
 
