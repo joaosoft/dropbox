@@ -7,12 +7,14 @@ import (
 
 	"fmt"
 
-	manager "github.com/joaosoft/manager"
+	"github.com/joaosoft/logger"
+	"github.com/joaosoft/manager"
 )
 
 type User struct {
 	client manager.IGateway
 	config *DropboxConfig
+	logger logger.ILogger
 }
 
 type getUserResponse struct {
@@ -68,17 +70,17 @@ func (u *User) Get() (*getUserResponse, error) {
 	}
 
 	if status, response, err := u.client.Request(http.MethodPost, u.config.Hosts.Api, "/users/get_current_account", headers, nil); err != nil {
-		err = log.WithField("response", response).Error("error getting User account").ToError()
+		err = u.logger.WithField("response", response).Error("error getting User account").ToError()
 		return nil, err
 	} else if status != http.StatusOK {
-		err = log.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError()
+		err = u.logger.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError()
 		return nil, err
 	} else if response == nil {
-		err = log.Error("error getting User account").ToError()
+		err = u.logger.Error("error getting User account").ToError()
 		return nil, err
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
-			err = log.Error("error converting Dropbox User data").ToError()
+			err = u.logger.Error("error converting Dropbox User data").ToError()
 			return nil, err
 		}
 		return dropboxResponse, nil

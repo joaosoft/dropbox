@@ -6,12 +6,14 @@ import (
 	"net/http"
 	"time"
 
-	manager "github.com/joaosoft/manager"
+	"github.com/joaosoft/logger"
+	"github.com/joaosoft/manager"
 )
 
 type Folder struct {
 	client manager.IGateway
 	config *DropboxConfig
+	logger logger.ILogger
 }
 
 type listFolderRequest struct {
@@ -66,7 +68,7 @@ func (f *Folder) List(path string) (*listFolderResponse, error) {
 		IncludeMountedFolders:           true,
 	})
 	if err != nil {
-		err = log.Error("error marshal bodyArgs").ToError()
+		err = f.logger.Error("error marshal bodyArgs").ToError()
 		return nil, err
 	}
 
@@ -77,17 +79,17 @@ func (f *Folder) List(path string) (*listFolderResponse, error) {
 
 	dropboxResponse := &listFolderResponse{}
 	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Api, "/files/list_folder", headers, body); err != nil {
-		err = log.WithField("response", response).Error("error listing Folder").ToError()
+		err = f.logger.WithField("response", response).Error("error listing Folder").ToError()
 		return nil, err
 	} else if status != http.StatusOK {
-		err = log.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError()
+		err = f.logger.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError()
 		return nil, err
 	} else if response == nil {
-		err = log.Error("error listing Folder").ToError()
+		err = f.logger.Error("error listing Folder").ToError()
 		return nil, err
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
-			err = log.Error("error converting Dropbox response data").ToError()
+			err = f.logger.Error("error converting Dropbox response data").ToError()
 			return nil, err
 		}
 		return dropboxResponse, nil
@@ -133,7 +135,7 @@ func (f *Folder) Create(path string) (*createFolderResponse, error) {
 	})
 	if err != nil {
 		err := err
-		log.Error("error marshal bodyArgs").ToError()
+		f.logger.Error("error marshal bodyArgs").ToError()
 		return nil, err
 	}
 
@@ -144,17 +146,17 @@ func (f *Folder) Create(path string) (*createFolderResponse, error) {
 
 	dropboxResponse := &createFolderResponse{}
 	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Api, "/files/create_folder_v2", headers, body); err != nil {
-		err = log.WithField("response", response).Error("error creating Folder").ToError()
+		err = f.logger.WithField("response", response).Error("error creating Folder").ToError()
 		return nil, err
 	} else if status != http.StatusOK {
-		err = log.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError()
+		err = f.logger.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError()
 		return nil, err
 	} else if response == nil {
-		err = log.Error("error creating Folder").ToError()
+		err = f.logger.Error("error creating Folder").ToError()
 		return nil, err
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
-			err = log.Error("error converting Dropbox response data").ToError()
+			err = f.logger.Error("error converting Dropbox response data").ToError()
 			return nil, err
 		}
 		return dropboxResponse, nil
