@@ -21,18 +21,16 @@ type Dropbox struct {
 // NewDropbox ...
 func NewDropbox(options ...DropboxOption) *Dropbox {
 	config, simpleConfig, err := NewConfig()
-	pm := manager.NewManager(manager.WithRunInBackground(false))
-	log := logger.NewLogDefault("dropbox", logger.DebugLevel)
 
 	service := &Dropbox{
 		client: manager.NewSimpleGateway(),
-		pm:     pm,
+		pm:     manager.NewManager(manager.WithRunInBackground(false)),
 		config: &config.Dropbox,
-		logger: log,
+		logger: logger.NewLogDefault("dropbox", logger.DebugLevel),
 	}
 
 	if service.isLogExternal {
-		pm.Reconfigure(manager.WithLogger(log))
+		service.pm.Reconfigure(manager.WithLogger(service.logger))
 	}
 
 	if err != nil {
