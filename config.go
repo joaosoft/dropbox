@@ -7,7 +7,7 @@ import (
 
 // AppConfig ...
 type AppConfig struct {
-	Dropbox *DropboxConfig `json:"dropbox"`
+	Dropbox DropboxConfig `json:"dropbox"`
 }
 
 // DropboxConfig ...
@@ -32,9 +32,7 @@ func NewConfig() (*AppConfig, manager.IConfig, error) {
 
 	if err != nil {
 		log.Error(err.Error())
-
-		appConfig.Dropbox = &DropboxConfig{}
 	}
 
-	return appConfig, simpleConfig, nil
+	return appConfig, simpleConfig, err
 }
