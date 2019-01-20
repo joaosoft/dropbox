@@ -32,7 +32,7 @@ func NewConfig() (*DropboxConfig, error) {
 	if _, err := gomanager.NewSimpleConfig(fmt.Sprintf("/config/app.%s.json", getEnv()), appConfig); err != nil {
 		log.Error(err.Error())
 
-		return &DropboxConfig{}, nil
+		return &DropboxConfig{}, err
 	}
 
 	return appConfig.Dropbox, nil
