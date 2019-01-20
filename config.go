@@ -2,8 +2,7 @@ package dropbox
 
 import (
 	"fmt"
-
-	gomanager "github.com/joaosoft/manager"
+	"github.com/joaosoft/manager"
 )
 
 // AppConfig ...
@@ -27,13 +26,15 @@ type DropboxConfig struct {
 }
 
 // NewConfig ...
-func NewConfig() (*DropboxConfig, error) {
+func NewConfig() (*AppConfig, manager.IConfig, error) {
 	appConfig := &AppConfig{}
-	if _, err := gomanager.NewSimpleConfig(fmt.Sprintf("/config/app.%s.json", getEnv()), appConfig); err != nil {
+	simpleConfig, err := manager.NewSimpleConfig(fmt.Sprintf("/config/app.%s.json", GetEnv()), appConfig)
+
+	if err != nil {
 		log.Error(err.Error())
 
-		return &DropboxConfig{}, err
+		appConfig.Dropbox = &DropboxConfig{}
 	}
 
-	return appConfig.Dropbox, nil
+	return appConfig, simpleConfig, nil
 }

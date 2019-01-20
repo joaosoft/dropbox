@@ -1,10 +1,8 @@
 package dropbox
 
 import (
-	"fmt"
-
-	logger "github.com/joaosoft/logger"
-	manager "github.com/joaosoft/manager"
+	"github.com/joaosoft/logger"
+	"github.com/joaosoft/manager"
 )
 
 type Dropbox struct {
@@ -21,28 +19,24 @@ type Dropbox struct {
 
 // NewDropbox ...
 func NewDropbox(options ...DropboxOption) *Dropbox {
+	config, simpleConfig, err := NewConfig()
 	pm := manager.NewManager(manager.WithRunInBackground(false))
 
 	dropbox := &Dropbox{
 		client: manager.NewSimpleGateway(),
 		pm:     pm,
-		config: &DropboxConfig{},
+		config: config.Dropbox,
 	}
 
 	if dropbox.isLogExternal {
 		pm.Reconfigure(manager.WithLogger(log))
 	}
 
-	// load configuration File
-	appConfig := &AppConfig{}
-	if simpleConfig, err := manager.NewSimpleConfig(fmt.Sprintf("/config/app.%s.json", getEnv()), appConfig); err != nil {
-		log.Error(err.Error())
-	} else if appConfig.Dropbox != nil {
-		pm.AddConfig("config_app", simpleConfig)
-		level, _ := logger.ParseLevel(appConfig.Dropbox.Log.Level)
+	if err == nil {
+		dropbox.pm.AddConfig("config_app", simpleConfig)
+		level, _ := logger.ParseLevel(config.Dropbox.Log.Level)
 		log.Debugf("setting log level to %s", level)
 		log.Reconfigure(logger.WithLevel(level))
-		dropbox.config = appConfig.Dropbox
 	}
 
 	dropbox.Reconfigure(options...)
