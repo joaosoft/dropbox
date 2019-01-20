@@ -9,7 +9,7 @@ type Dropbox struct {
 	client        manager.IGateway
 	config        *DropboxConfig
 	pm            *manager.Manager
-	logger logger.ILogger
+	logger        logger.ILogger
 	isLogExternal bool
 
 	// usage ...
@@ -21,10 +21,11 @@ type Dropbox struct {
 // NewDropbox ...
 func NewDropbox(options ...DropboxOption) *Dropbox {
 	config, simpleConfig, err := NewConfig()
+	pm := manager.NewManager(manager.WithRunInBackground(false))
 
 	service := &Dropbox{
-		client: manager.NewSimpleGateway(),
-		pm:     manager.NewManager(manager.WithRunInBackground(false)),
+		client: pm.NewSimpleGateway(),
+		pm:     pm,
 		config: &config.Dropbox,
 		logger: logger.NewLogDefault("dropbox", logger.DebugLevel),
 	}
