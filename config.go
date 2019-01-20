@@ -27,14 +27,13 @@ type DropboxConfig struct {
 }
 
 // NewConfig ...
-func NewConfig(access, token string) *DropboxConfig {
+func NewConfig() (*DropboxConfig, error) {
 	appConfig := &AppConfig{}
 	if _, err := gomanager.NewSimpleConfig(fmt.Sprintf("/config/app.%s.json", getEnv()), appConfig); err != nil {
 		log.Error(err.Error())
+
+		return &DropboxConfig{}, nil
 	}
 
-	appConfig.Dropbox.Authorization.Access = access
-	appConfig.Dropbox.Authorization.Token = token
-
-	return appConfig.Dropbox
+	return appConfig.Dropbox, nil
 }
