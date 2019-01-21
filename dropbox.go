@@ -27,7 +27,7 @@ func NewDropbox(options ...DropboxOption) *Dropbox {
 		client: pm.NewSimpleGateway(),
 		pm:     pm,
 		config: &config.Dropbox,
-		logger: logger.NewLogDefault("dropbox", logger.DebugLevel),
+		logger: logger.NewLogDefault("dropbox", logger.WarnLevel),
 	}
 
 	if service.isLogExternal {
