@@ -26,7 +26,7 @@ func NewDropbox(options ...DropboxOption) *Dropbox {
 	service := &Dropbox{
 		client: pm.NewSimpleGateway(),
 		pm:     pm,
-		config: &config.Dropbox,
+		config: config.Dropbox,
 		logger: logger.NewLogDefault("dropbox", logger.WarnLevel),
 	}
 
@@ -36,7 +36,7 @@ func NewDropbox(options ...DropboxOption) *Dropbox {
 
 	if err != nil {
 		service.logger.Error(err.Error())
-	} else {
+	} else if config.Dropbox != nil {
 		service.pm.AddConfig("config_app", simpleConfig)
 		level, _ := logger.ParseLevel(config.Dropbox.Log.Level)
 		service.logger.Debugf("setting log level to %s", level)

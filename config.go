@@ -7,7 +7,7 @@ import (
 
 // AppConfig ...
 type AppConfig struct {
-	Dropbox DropboxConfig `json:"dropbox"`
+	Dropbox *DropboxConfig `json:"dropbox"`
 }
 
 // DropboxConfig ...
