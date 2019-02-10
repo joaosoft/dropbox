@@ -74,7 +74,7 @@ func (f *File) Upload(path string, file []byte) (*uploadFileResponse, error) {
 	headers := manager.Headers{
 		"Authorization":   {fmt.Sprintf("%s %s", f.config.Authorization.Access, f.config.Authorization.Token)},
 		"Content-Type":    {"application/octet-stream"},
-		"Dropbox-API-Arg": {string(bodyArgs)},
+		"Img-API-Arg": {string(bodyArgs)},
 	}
 
 	dropboxResponse := &uploadFileResponse{}
@@ -94,7 +94,7 @@ func (f *File) Upload(path string, file []byte) (*uploadFileResponse, error) {
 		return nil, err
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
-			err = f.logger.Error("errors converting Dropbox response data").ToError()
+			err = f.logger.Error("errors converting Img response data").ToError()
 			return nil, err
 		}
 		return dropboxResponse, nil
@@ -121,7 +121,7 @@ func (f *File) Download(path string) ([]byte, error) {
 
 	headers := manager.Headers{
 		"Authorization":   {fmt.Sprintf("%s %s", f.config.Authorization.Access, f.config.Authorization.Token)},
-		"Dropbox-API-Arg": {string(bodyArgs)},
+		"Img-API-Arg": {string(bodyArgs)},
 	}
 
 	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Content, "/files/download", headers, []byte("")); err != nil {
@@ -201,7 +201,7 @@ func (f *File) Delete(path string) (*deleteFileResponse, error) {
 		return nil, err
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
-			err = f.logger.Error("errors converting Dropbox response data").ToError()
+			err = f.logger.Error("errors converting Img response data").ToError()
 			return nil, err
 		}
 		return dropboxResponse, nil

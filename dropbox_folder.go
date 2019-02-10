@@ -89,7 +89,7 @@ func (f *Folder) List(path string) (*listFolderResponse, error) {
 		return nil, err
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
-			err = f.logger.Error("error converting Dropbox response data").ToError()
+			err = f.logger.Error("error converting Img response data").ToError()
 			return nil, err
 		}
 		return dropboxResponse, nil
@@ -156,7 +156,7 @@ func (f *Folder) Create(path string) (*createFolderResponse, error) {
 		return nil, err
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
-			err = f.logger.Error("error converting Dropbox response data").ToError()
+			err = f.logger.Error("error converting Img response data").ToError()
 			return nil, err
 		}
 		return dropboxResponse, nil
