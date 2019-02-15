@@ -74,7 +74,7 @@ func (f *File) Upload(path string, file []byte) (*uploadFileResponse, error) {
 	headers := manager.Headers{
 		"Authorization":   {fmt.Sprintf("%s %s", f.config.Authorization.Access, f.config.Authorization.Token)},
 		"Content-Type":    {"application/octet-stream"},
-		"Img-API-Arg": {string(bodyArgs)},
+		"Dropbox-API-Arg": {string(bodyArgs)},
 	}
 
 	dropboxResponse := &uploadFileResponse{}
@@ -121,7 +121,7 @@ func (f *File) Download(path string) ([]byte, error) {
 
 	headers := manager.Headers{
 		"Authorization":   {fmt.Sprintf("%s %s", f.config.Authorization.Access, f.config.Authorization.Token)},
-		"Img-API-Arg": {string(bodyArgs)},
+		"Dropbox-API-Arg": {string(bodyArgs)},
 	}
 
 	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Content, "/files/download", headers, []byte("")); err != nil {
