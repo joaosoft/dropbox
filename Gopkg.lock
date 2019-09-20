@@ -93,7 +93,7 @@
   name = "github.com/joaosoft/manager"
   packages = ["."]
   pruneopts = "UT"
-  revision = "375d87dc652e6480dacd6e6571ad5fd35955fb81"
+  revision = "e02d5a4947deea8caa640bf5371c4f0b27042a2c"
 
 [[projects]]
   branch = "master"
