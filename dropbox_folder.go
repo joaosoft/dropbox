@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-	"web"
 
+	"github.com/joaosoft/web"
 	"github.com/joaosoft/logger"
 	"github.com/joaosoft/manager"
 )
