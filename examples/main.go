@@ -8,7 +8,10 @@ import (
 )
 
 func main() {
-	d := dropbox.NewDropbox()
+	d, err := dropbox.NewDropbox()
+	if err != nil {
+		panic(err)
+	}
 
 	//get user information
 	log.Info("get user information")

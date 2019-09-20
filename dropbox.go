@@ -19,12 +19,17 @@ type Dropbox struct {
 }
 
 // NewDropbox ...
-func NewDropbox(options ...DropboxOption) *Dropbox {
+func NewDropbox(options ...DropboxOption) (*Dropbox, error) {
 	config, simpleConfig, err := NewConfig()
 	pm := manager.NewManager(manager.WithRunInBackground(false))
 
+	client, err := pm.NewSimpleGateway()
+	if err != nil {
+		return nil, err
+	}
+
 	service := &Dropbox{
-		client: pm.NewSimpleGateway(),
+		client: client,
 		pm:     pm,
 		config: config.Dropbox,
 		logger: logger.NewLogDefault("dropbox", logger.WarnLevel),
@@ -45,7 +50,7 @@ func NewDropbox(options ...DropboxOption) *Dropbox {
 
 	service.Reconfigure(options...)
 
-	return service
+	return service, nil
 }
 
 // Api ...
