@@ -8,6 +8,7 @@ import (
 
 	"github.com/joaosoft/logger"
 	"github.com/joaosoft/manager"
+	"github.com/joaosoft/web"
 )
 
 type writeMode string
@@ -73,7 +74,6 @@ func (f *File) Upload(path string, file []byte) (*uploadFileResponse, error) {
 
 	headers := manager.Headers{
 		"Authorization":   {fmt.Sprintf("%s %s", f.config.Authorization.Access, f.config.Authorization.Token)},
-		"Content-Type":    {"application/octet-stream"},
 		"Dropbox-API-Arg": {string(bodyArgs)},
 	}
 
@@ -82,7 +82,7 @@ func (f *File) Upload(path string, file []byte) (*uploadFileResponse, error) {
 		err = f.logger.Error("errors marshal arguments").ToError()
 		return nil, err
 	}
-	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Content, "/files/upload", headers, file); err != nil {
+	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Content, "/files/upload", string(web.ContentTypeApplicationOctetStream), headers, file); err != nil {
 		f.logger.WithField("response", response).Errorf("error uploading file to %s", path)
 		return nil, err
 	} else if status != http.StatusOK {
@@ -124,7 +124,7 @@ func (f *File) Download(path string) ([]byte, error) {
 		"Dropbox-API-Arg": {string(bodyArgs)},
 	}
 
-	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Content, "/files/download", headers, []byte("")); err != nil {
+	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Content, "/files/download", string(web.ContentTypeApplicationOctetStream), headers, []byte("")); err != nil {
 		err = f.logger.WithField("response", response).Error("errors downloading File").ToError()
 		return nil, err
 	} else if status != http.StatusOK {
@@ -186,11 +186,10 @@ func (f *File) Delete(path string) (*deleteFileResponse, error) {
 
 	headers := manager.Headers{
 		"Authorization": {fmt.Sprintf("%s %s", f.config.Authorization.Access, f.config.Authorization.Token)},
-		"Content-Type":  {"application/json"},
 	}
 
 	dropboxResponse := &deleteFileResponse{}
-	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Api, "/files/delete_v2", headers, body); err != nil {
+	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Api, "/files/delete_v2", string(web.ContentTypeApplicationJSON), headers, body); err != nil {
 		err = f.logger.WithField("response", response).Error("errors deleting File").ToError()
 		return nil, err
 	} else if status != http.StatusOK {

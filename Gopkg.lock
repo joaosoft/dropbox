@@ -89,11 +89,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:9b56a1cfa98f1592c0c6758c4207c6fbe98e51c00db8bbc191cc460fccda2a9c"
+  digest = "1:acfa2a204beec76c7442f16a3f5350afd6e1eb016a2204baeccd705e249aa06d"
   name = "github.com/joaosoft/manager"
   packages = ["."]
   pruneopts = "UT"
-  revision = "07e6a3cff2afda3d3e67ae28f8271ecd4a25e22d"
+  revision = "375d87dc652e6480dacd6e6571ad5fd35955fb81"
 
 [[projects]]
   branch = "master"
@@ -339,6 +339,7 @@
   input-imports = [
     "github.com/joaosoft/logger",
     "github.com/joaosoft/manager",
+    "github.com/joaosoft/web",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

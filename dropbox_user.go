@@ -9,6 +9,7 @@ import (
 
 	"github.com/joaosoft/logger"
 	"github.com/joaosoft/manager"
+	"github.com/joaosoft/web"
 )
 
 type User struct {
@@ -69,7 +70,7 @@ func (u *User) Get() (*getUserResponse, error) {
 		"Authorization": {fmt.Sprintf("%s %s", u.config.Authorization.Access, u.config.Authorization.Token)},
 	}
 
-	if status, response, err := u.client.Request(http.MethodPost, u.config.Hosts.Api, "/users/get_current_account", headers, nil); err != nil {
+	if status, response, err := u.client.Request(http.MethodPost, u.config.Hosts.Api, "/users/get_current_account", string(web.ContentTypeEmpty), headers, nil); err != nil {
 		err = u.logger.WithField("response", response).Error("error getting User account").ToError()
 		return nil, err
 	} else if status != http.StatusOK {

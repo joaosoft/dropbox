@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+	"web"
 
 	"github.com/joaosoft/logger"
 	"github.com/joaosoft/manager"
@@ -74,11 +75,10 @@ func (f *Folder) List(path string) (*listFolderResponse, error) {
 
 	headers := manager.Headers{
 		"Authorization": {fmt.Sprintf("%s %s", f.config.Authorization.Access, f.config.Authorization.Token)},
-		"Content-Type":  {"application/json"},
 	}
 
 	dropboxResponse := &listFolderResponse{}
-	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Api, "/files/list_folder", headers, body); err != nil {
+	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Api, "/files/list_folder", string(web.ContentTypeApplicationJSON), headers, body); err != nil {
 		err = f.logger.WithField("response", response).Error("error listing Folder").ToError()
 		return nil, err
 	} else if status != http.StatusOK {
@@ -141,11 +141,10 @@ func (f *Folder) Create(path string) (*createFolderResponse, error) {
 
 	headers := manager.Headers{
 		"Authorization": {fmt.Sprintf("%s %s", f.config.Authorization.Access, f.config.Authorization.Token)},
-		"Content-Type":  {"application/json"},
 	}
 
 	dropboxResponse := &createFolderResponse{}
-	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Api, "/files/create_folder_v2", headers, body); err != nil {
+	if status, response, err := f.client.Request(http.MethodPost, f.config.Hosts.Api, "/files/create_folder_v2", string(web.ContentTypeApplicationJSON), headers, body); err != nil {
 		err = f.logger.WithField("response", response).Error("error creating Folder").ToError()
 		return nil, err
 	} else if status != http.StatusOK {
