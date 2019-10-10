@@ -71,17 +71,17 @@ func (u *User) Get() (*getUserResponse, error) {
 	}
 
 	if status, response, err := u.client.Request(http.MethodPost, u.config.Hosts.Api, "/users/get_current_account", string(web.ContentTypeEmpty), headers, nil); err != nil {
-		err = u.logger.WithField("response", response).Error("error getting User account").ToError()
+		err = u.logger.WithField("response", response).Error("error getting Role account").ToError()
 		return nil, err
 	} else if status != http.StatusOK {
 		err = u.logger.WithField("response", response).Errorf("response status %d instead of %d", status, http.StatusOK).ToError()
 		return nil, err
 	} else if response == nil {
-		err = u.logger.Error("error getting User account").ToError()
+		err = u.logger.Error("error getting Role account").ToError()
 		return nil, err
 	} else {
 		if err := json.Unmarshal(response, dropboxResponse); err != nil {
-			err = u.logger.Error("error converting Img User data").ToError()
+			err = u.logger.Error("error converting Img Role data").ToError()
 			return nil, err
 		}
 		return dropboxResponse, nil
