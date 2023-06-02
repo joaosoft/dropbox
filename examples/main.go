@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"dropbox"
+	"github.com/joaosoft/dropbox"
 
 	log "github.com/joaosoft/logger"
 )
